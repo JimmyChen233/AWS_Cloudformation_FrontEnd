@@ -21,7 +21,8 @@ change directory to IaC
 ```
 cd AWS_Cloudformation_FrontEnd/IaC
 ```
-// S3
+#Step 1: Create S3 Buckets
+
 In file _s3.yml_, customise parameters default values. You should always check parameters before creating a stack. 
 ![image](https://user-images.githubusercontent.com/57895489/150568433-c71ef335-24fb-4429-955b-12a54f25bd55.png)
 
@@ -33,6 +34,8 @@ Note: stack name must be unique.
 
 In file _r53.yml_, place the hosted zone id with yours.
 ![image](https://user-images.githubusercontent.com/57895489/150569939-d8a7c8ab-3508-41df-8038-18df17f27b8c.png)
+
+#Step 2: Add A Records to Hosted Zone
 
 We will create three A Records in this stack.
 
@@ -47,5 +50,12 @@ I add _dualstack._ prefix in my domain name because it allows clients to connect
 
 run ```aws cloudformation create-stack --stack-name r53 --template-body file://$PWD/r53.yml```
 
+#Step 3: Request a certificate in AWS Certificate Manager
+
+We need to create a certificate in us-east-1 manually first to create a stack with CloudFront. But I would like to have my certificate to be deployed from within the same CloudFormation template with my other ymls. 
+
+Here is a try
+```aws --region us-east-1 cloudformation create-stack --stack-name acm --template-body file://$PWD/acm.yml```
+It will request a public certificate with three domains, and create three CNAME Records automatically. But the stack is in us-east-1, and our main stacks are in sydney. Since we only need this certificate, we can copy the certificate ARN manually. (Still ugly, but this is the easiest wasy) Or we can use a custom resource to pass the arn to a lambda function that outputs to an SSM parameter that can be read by the main template and output. See: _https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/523_
 
 
