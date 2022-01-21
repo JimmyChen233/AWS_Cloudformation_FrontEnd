@@ -60,4 +60,13 @@ Here is a try
 
 It will request a public certificate with three domains, and create three CNAME Records automatically. But the stack is in us-east-1, and our main stacks are in sydney. Since we only need this certificate, we can copy the certificate ARN manually. (Still ugly, but this is the easiest wasy) Or we can use a custom resource to pass the arn to a lambda function that outputs to an SSM parameter that can be read by the main template and output. See: _https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/523_
 
+#Step 4: Create a distribution in CloudFront
 
+```aws cloudformation create-stack --stack-name cloudfront --template-body file://$PWD/cloudfront.yml ```
+
+Cache policy can be found here:
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+
+#Step 5: Update records in Route 53
+
+To be continued ...
