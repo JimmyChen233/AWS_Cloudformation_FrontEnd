@@ -33,11 +33,15 @@ Note: stack name must be unique.
 In file _r53.yml_, place the hosted zone id with yours.
 ![image](https://user-images.githubusercontent.com/57895489/150569939-d8a7c8ab-3508-41df-8038-18df17f27b8c.png)
 
-We will create 6 records in this stack: three A Records and three CNAME Records.
-run ```aws cloudformation create-stack --stack-name r53 --template-body file://$PWD/r53.yml```
+We will create three A Records in this stack.
 
 ![image](https://user-images.githubusercontent.com/57895489/150570440-5f86412f-7355-4d6d-8319-9cc69016b91e.png)
 Here we determinate a route that alias to AWS S3 weisite endpoint. Since the region is fixed to ap-southeast-2(Sydney) in this tutorial, you can get the applicable value using the AWS CLI command ```get-domain-names```, or find the regional hosted zone id here: _https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_website_region_endpoints_
 
+For our alb record, I just import values from my previus back-end IaC stack. Of course you can do it manually.
+![image](https://user-images.githubusercontent.com/57895489/150574060-31e44065-72ce-493a-a9b9-73f021c6b53e.png)
 
+I add _dualstack._ prefix in my domain name because it allows clients to connect from both IPv4 and IPv6. 
+![image](https://user-images.githubusercontent.com/57895489/150574682-09a37008-460e-403e-9e7e-1a3456cc2dc5.png)
 
+run ```aws cloudformation create-stack --stack-name r53 --template-body file://$PWD/r53.yml```
