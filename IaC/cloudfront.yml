@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Create a distribution in cloudfront for bypassj2.link
+Description: Create a distribution in cloudfront for jimmydevops.link
 
 Parameters:
   DomainName:
@@ -19,14 +19,31 @@ Resources:
     Properties:
       DistributionConfig:
         Comment: cloudfront distribution for bypassj2
-        Origin:
-          DomainName: !Join ['.',!Ref DomainName, 's3.ap-southeast-2.amazonaws.com']
-          Id: !Join ['.',!Ref DomainName, 's3.ap-southeast-2.amazonaws.com']
-          S3OriginConfig:
-            OriginAccessIdentity:  E9XB5I38ZIJPU
-
         DefaultCacheBehavior:
           Compress: true
-          TargetOriginId: 
-          ViewerProtocolPolicy: 
-        Enabled: 
+          TargetOriginId: jimmyDevOps
+          ViewerProtocolPolicy: allow-all
+          AllowedMethods: 
+            - GET
+            - HEAD
+          CachePolicyId:  658327ea-f89d-4fab-a63d-7e88639e58f6
+        Enabled: true
+        Origins:
+          - DomainName: !Join ['.',[!Ref DomainName, 's3.ap-southeast-2.amazonaws.com']]
+            Id: jimmyDevOps
+            S3OriginConfig:
+              OriginAccessIdentity:  !Join ['', ['origin-access-identity/cloudfront/', !Ref oaiUser]] 
+        PriceClass: PriceClass_All
+        Aliases: 
+          - !Ref DomainName
+          - !Join ['.',['www',!Ref DomainName]]
+        ViewerCertificate:
+          AcmCertificateArn: arn:aws:acm:us-east-1:325660384969:certificate/5028ca02-adae-4fe2-a25c-fd5f73243d90
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
+
+        CustomErrorResponses: 
+          - ErrorCachingMinTTL: 0
+            ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html

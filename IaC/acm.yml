@@ -18,15 +18,25 @@ Parameters:
   DomainName:
     Type: String
     Default: jimmydevops.link
+  HostedZoneId:
+    Type: String
+    Default: Z04748123G3ZYPAL4ROSP
 
 Resources:
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !Join ['.', ['*', !Ref DomainName]]
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Join ['.', ['www', !Ref DomainName]]
+        - !Join ['.', ['alb', !Ref DomainName]]
       DomainValidationOptions:
         - DomainName: !Ref DomainName
-          HostedZoneId: !ImportValue DNS
+          HostedZoneId: !Ref HostedZoneId
+        - DomainName: !Join ['.', ['www', !Ref DomainName]]
+          HostedZoneId: !Ref HostedZoneId
+        - DomainName: !Join ['.', ['alb', !Ref DomainName]]
+          HostedZoneId: !Ref HostedZoneId
       ValidationMethod: DNS
       Tags:
         - Key: owner
@@ -36,25 +46,6 @@ Resources:
         - Key: environment
           Value: !Ref environment
 
-  myDNSRecord3:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget: 
-        DNSName: s3-website-ap-southeast-2.amazonaws.com
-        HostedZoneId: Z1WCIGYICN2BYD
-      HostedZoneId: !ImportValue DNS
-      Name: !Ref DomainName
-      Type: A
-
-  myDNSRecord4:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget: 
-        DNSName: s3-website-ap-southeast-2.amazonaws.com
-        HostedZoneId: Z1WCIGYICN2BYD
-      HostedZoneId: !ImportValue DNS
-      Name: !Ref DomainName
-      Type: A
 
 Outputs:
   Certificate:

@@ -1,29 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Create hosted zone and records for bypassj2.link
+Description: Create hosted zone and records for jimmydevops.link
 
 Parameters:
   DomainName:
     Type: String
-    Default: bypassj2.link
-  SubdomainName:
-    Type: String
-    Default: www.bypassj2.link
-  owner:
-    Type: String 
-    Default: Jimmy
-  ownerEmail:
-    Type: String
-    Default: aszln5766@gmail.com
-  environment:
-    Type: String
-    Default: development
-    AllowedValues: 
-      - development
-      - production
-      - test
+    Default: jimmydevops.link
   HostedZoneId:
     Type: String
-    Default: Z08007761I2JN3BI9ZBUO
+    Default: Z04748123G3ZYPAL4ROSP
     
 
 Resources:
@@ -52,20 +36,12 @@ Resources:
     Type: AWS::Route53::RecordSet
     Properties:
       AliasTarget: 
-        DNSName: s3-website-ap-southeast-2.amazonaws.com
-        HostedZoneId : Z1WCIGYICN2BYD
+        DNSName: !Join ['.',['dualstack', !ImportValue bypassqAlbDNS]]
+        #HostedZoneId: !ImportValue bypassqAlbHostedZoneId
+        HostedZoneId: Z1GM3OXH4ZPM65
       HostedZoneId : !Ref HostedZoneId
-      Name: !Join ['', ['www.', !Ref DomainName]]
+      Name: !Join ['', ['alb.', !Ref DomainName]]
       Type: A
 
-  myDNSRecord4:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget: 
-        DNSName: !Join ['.',['dualstack', !ImportValue bypassqAlbDNS]]
-        HostedZoneId : Z1WCIGYICN2BYD
-      HostedZoneId : !Ref HostedZoneId
-      Name: !Join ['', ['www.', !Ref DomainName]]
-      Type: CNAME
-    
+
 
