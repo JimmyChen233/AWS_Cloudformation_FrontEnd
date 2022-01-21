@@ -55,7 +55,9 @@ run ```aws cloudformation create-stack --stack-name r53 --template-body file://$
 We need to create a certificate in us-east-1 manually first to create a stack with CloudFront. But I would like to have my certificate to be deployed from within the same CloudFormation template with my other ymls. 
 
 Here is a try
+
 ```aws --region us-east-1 cloudformation create-stack --stack-name acm --template-body file://$PWD/acm.yml```
+
 It will request a public certificate with three domains, and create three CNAME Records automatically. But the stack is in us-east-1, and our main stacks are in sydney. Since we only need this certificate, we can copy the certificate ARN manually. (Still ugly, but this is the easiest wasy) Or we can use a custom resource to pass the arn to a lambda function that outputs to an SSM parameter that can be read by the main template and output. See: _https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/523_
 
 
