@@ -21,6 +21,7 @@ change directory to IaC
 ```
 cd AWS_Cloudformation_FrontEnd/IaC
 ```
+// S3
 In file _s3.yml_, customise parameters default values. You should always check parameters before creating a stack. 
 ![image](https://user-images.githubusercontent.com/57895489/150568433-c71ef335-24fb-4429-955b-12a54f25bd55.png)
 
@@ -45,3 +46,6 @@ I add _dualstack._ prefix in my domain name because it allows clients to connect
 ![image](https://user-images.githubusercontent.com/57895489/150574682-09a37008-460e-403e-9e7e-1a3456cc2dc5.png)
 
 run ```aws cloudformation create-stack --stack-name r53 --template-body file://$PWD/r53.yml```
+
+
+
